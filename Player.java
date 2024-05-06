@@ -49,7 +49,7 @@ class Player {
                 case "help":
                     printHelp();
                     break;
-                case "in":
+                case "inventory":
                     inventory();
                     break;
                 case "quit":
@@ -98,27 +98,31 @@ class Player {
     public void inspect (String item){
         Item findItem = null;
         for (Item itemObj : getCurentRoom().items){ // search room 
-            if (itemObj.name.equalsIgnoreCase(item)){
-                findItem = itemObj; 
-            }
-            if ( itemObj.contains[0] != null) 
-                if (itemObj.contains[0].name.equalsIgnoreCase(item) && itemObj.contains[0].visible){
-                    findItem = itemObj.contains[0];
+            if (itemObj.name.equalsIgnoreCase(item)){   // if item in room matches search item
+                findItem = itemObj;     // assign the item to the found item
+                
+                if (findItem != null){
+                    if ( findItem.contains[0] != null)   {// if the room item contains another item inside of it
+                            findItem.contains[0].visible = true;
+                    }
+                }
             }
         }
         
-        if (this.inventory[0] != null){ // search inventory
+        
+        if (this.inventory[0] != null){ // search player inventory for a matching item name
             if (this.inventory[0].name.equalsIgnoreCase(item)){
                 findItem = this.inventory[0];
             }
         }
 
-        if (findItem != null){
-            System.out.print("\t "+ findItem.description);
+        if (findItem != null){      // if an matching item was found in the room or inside another item or in player inventory
+            if (findItem.visible) System.out.print("\t "+ findItem.description);
 
             if (findItem.contains[0] != null){
                 findItem.contains[0].visible = true;
                 findItem.contains[0].takeable = true;
+                System.out.print(", " + findItem.contains[0].name);
             }
             System.out.println();
         }
